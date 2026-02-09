@@ -16,6 +16,9 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
 - Treat **Block ISA** as the architectural control-flow model: every MachineBasicBlock must map to a block that begins with a block start marker and commits at a block boundary. (Evidence: LLVM-01, LLVM-02)
 - Treat `FENTRY`/`FEXIT`/`FRET.*` as **standalone blocks**; do not surround them with extra `BSTART`/`BSTOP` or prologue/epilogue stack micro-ops. (Evidence: LLVM-03)
 - Preserve the **call header adjacency** rule: `BSTART CALL, <target>` and the return-address materialization (`SETRET`/`C.SETRET`) must be adjacent. (Evidence: LLVM-04)
+- Decoupled block lowering is **not optional** for bring-up:
+  - Tile blocks (`BSTART.TMA`/`BSTART.CUBE`) MUST be emitted as decoupled headers with a `B.TEXT` body pointer, and the referenced body MUST be linear and terminate at `C.BSTOP`.
+  - For the initial compiler, tile blocks may use a per-function **empty body stub** (`.__linx_empty_body`) that contains only `C.BSTOP`. (Keep header-only semantics.) (Evidence: LLVM-02)
 
 ## Core workflow (add or modify an instruction)
 

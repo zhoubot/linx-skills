@@ -51,6 +51,25 @@ For each benchmark target, plan to produce:
 - Memory ordering: what is guaranteed without fences
 - ABI: stack alignment, callee-saved, syscall convention
 
+## Alignment checklist (spec → compiler → emulator → RTL)
+
+Use this list when adding or changing any of these “stack-wide” contracts:
+
+- **Decoupled blocks**
+  - Define header-only legality + required `B.TEXT` (spec)
+  - Compiler emits `B.TEXT` + out-of-line linear bodies (plus empty-body stubs where appropriate)
+  - Emulator implements header→body→return execution and traps on illegal body instructions
+  - RTL/pyCircuit/Janus implement the same state machine and expose `BSTATE` fields needed for restart
+- **Template blocks (restartable)**
+  - Define template progress state in `BSTATE/EBSTATE` (spec)
+  - Emulator executes “one step” per helper/iteration so interrupts can land between steps
+  - RTL implements a micro-op sequencer with precise restart from saved progress
+- **TTBR0/TTBR1 MMU + IOMMU**
+  - Lock down v0.1 profile: 4K, 48-bit canonical VA, permission bits, fault reporting (`TRAPARG0`, cause)
+  - QEMU page-walk + TLB behavior matches the spec subset
+  - Linux programs TTBR/TCR/MAIR and handles page faults without skipping work
+  - RTL integrates MMU/IOMMU with LSU/TMA ordering rules
+
 ## Outputs to produce
 
 - Architecture spec deltas + rationale

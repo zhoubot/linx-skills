@@ -16,6 +16,10 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
 1. Treat **Block ISA** as a first-class chapter, not “just branches”: define block boundaries, CARG, and the safety rule up front. (Evidence: MAN-01, MAN-02, MAN-03)
 2. Treat **frame macro blocks** (`FENTRY`/`FEXIT`/`FRET.*`) as **standalone blocks**, not instructions that must be wrapped in `BSTART`/`BSTOP`. (Evidence: MAN-04, MAN-05)
 3. Keep the spec **machine-checkable**: align prose with the generated JSON spec and codec tables (`isa.txt → isa/spec/linxisa-v0.1.json → validate_spec → gen_*_codec`). (Evidence: MAN-06)
+4. When introducing new block types or tooling, explicitly define the **three block forms** and their legality:
+   - Coupled blocks: `BSTART … inst* … BSTOP`
+   - Decoupled blocks: header-only descriptors + `B.TEXT <tpc>` to an out-of-line **linear** body that terminates at `BSTOP`
+   - Template blocks: standalone “code template gen” blocks (`FENTRY/FEXIT/FRET*/MCOPY/MSET`) that MUST NOT appear inside `BSTART..BSTOP`. (Evidence: MAN-01, MAN-04)
 
 ## Workflow
 
@@ -40,6 +44,10 @@ Add (or update) these Linx-specific items when applicable:
 - **Block boundary behavior**: whether the instruction is a block marker, and whether it is valid only inside a block (e.g., `SETC.*`/`SETRET`). (Evidence: MAN-01, MAN-03)
 - **Control-flow safety rule impact**: if the instruction creates a control-flow target, specify that it MUST target a block start marker (including template blocks). (Evidence: MAN-02, MAN-03)
 - **Call header adjacency rule**: if documenting calls/returns, specify the `BSTART CALL` + `SETRET` “no instruction in between” rule. (Evidence: MAN-07)
+- **Decoupled legality** (for any `B.*` header descriptor or `BSTART.<type>`):
+  - State whether the instruction is valid in a decoupled **header**, a decoupled **body**, or both.
+  - For headers, list the allowed descriptor set and require exactly one `B.TEXT` when decoupled.
+  - For bodies, state the forbidden set (no block markers, no branches/calls/returns, no `B.*` descriptors, no templates) and the termination rule (`BSTOP` only).
 
 For a new instruction:
 
@@ -92,6 +100,17 @@ Then manually check the “sharp edges” list below and the Block ISA checklist
 - Flag updates: per-instruction vs global rules
 - Memory ordering: what fences/atomics actually guarantee
 - Exceptions: priority, precise state, side effects when trapping
+
+## Decoupled block entry template (copy/paste)
+
+Use this when documenting a new decoupled block type (e.g. `BSTART.TMA`, `BSTART.CUBE`, `BSTART.VPAR/VSEQ`):
+
+- **Header form**: `BSTART.<type>` then only `B.*` header descriptors; header ends at `BSTOP` or implicitly at the next block start marker.
+- **Body pointer**: `B.TEXT <tpc>` is required exactly once in the header; `<tpc>` points to the out-of-line body.
+- **Body form**: linear snippet beginning at `<tpc>`; MUST terminate at `BSTOP`/`C.BSTOP`.
+- **Forbidden in body**: any `BSTART.*`, any template block, any branch/jump/call/ret, any `B.*` header descriptor.
+- **Return rule**: on body `BSTOP`, resume at the header continuation PC.
+- **Trap semantics**: specify what `TRAPNO/TRAPARG/BSTATE/EBSTATE` report when trapping in header vs body.
 
 ## Resources
 

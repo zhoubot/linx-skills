@@ -16,6 +16,14 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
 - Implement and test the **safety rule**: architectural control-flow targets must land on a block start marker; otherwise trap/illegal. (Evidence: RTL-01)
 - Model **block boundaries** correctly: blocks end at `BSTOP`/`C.BSTOP` or the next block start marker; block-local state (e.g., CARG) resets at block start and is evaluated/committed at boundaries. (Evidence: RTL-01)
 - Treat `FENTRY`/`FEXIT`/`FRET.*` as standalone blocks when generating/consuming traces and when defining “function boundary” behavior. (Evidence: RTL-02)
+- Implement the decoupled header/body machine:
+  - Headers collect only `B.*` descriptors and a required `B.TEXT` body pointer
+  - Bodies are linear and terminate at `BSTOP`; illegal markers/branches/descriptors in-body trap
+  - Header→body internal jump bypasses the safety rule; body→return re-enables it.
+- Template blocks (`FENTRY/FEXIT/FRET*/MCOPY/MSET`) are **restartable**:
+  - Implement a micro-op sequencer that can yield between steps
+  - Save/restore progress in `BSTATE/EBSTATE` so traps/interrupts resume precisely.
+- MMU/IOMMU bring-up profile: TTBR0/TTBR1 page-walk (4K, canonical VA) + tile IOMMU for DMA-style engines; surface fault address/cause in the same fields as QEMU.
 
 ## Bring-up workflow (recommended loop)
 
@@ -36,6 +44,7 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
 - Trap/exception cause + tval + next PC
 - Reset sequencing + privilege state
 - Block-control metadata (when available): `brtype`, `carg`, `cond`, `tgt` (match what QEMU logs on failures). (Evidence: RTL-03)
+- Block/trap restart state (when implemented): `BSTATE` snapshot at trap, `EBSTATE` valid bit, and a “in-body vs in-header” indicator (`BI`) to debug decoupled/template restart.
 
 ## Practical verification structure
 

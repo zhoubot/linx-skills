@@ -63,6 +63,19 @@ Key docs:
 - Golden outputs: `examples/generated/linx_cpu_pyc/`
 - Regression helper: `bash tools/run_linx_cpu_pyc_cpp.sh`
 
+### Alignment tasks (when the ISA contract changes)
+
+When the Linx ISA “contract” changes (Block forms, templates, MMU/IOMMU), treat these as required updates for the pyCircuit/Janus models:
+
+- **Decode**: add opcode recognition for `B.TEXT`, `B.IOR`, `B.ATTR`, `TLB.*`, and `HL.SSRGET/HL.SSRSET` full IDs.
+- **Control state**: implement decoupled header→body→return and body legality checks.
+- **Template engine**: model template blocks as restartable step sequences (progress recorded in a `BSTATE/EBSTATE`-like struct).
+- **Memory**: add MMU/IOMMU hooks (even if initially identity) so the call sites are stable.
+- **Regressions**: add/refresh directed programs for:
+  - Decoupled headers (`B.TEXT` present, empty-body stubs for tile ops)
+  - Template restartability (fault mid-template, resume without double-commit)
+  - TTBR0/TTBR1 basic translation + IOMMU tile translation
+
 ## Trace export (Konata / Perfetto)
 
 If your tree includes PR #1 “Add pipeview, swimlane” (`zhoubot/pyCircuit`, head `ea63425c3f...`), the C++ TB supports:

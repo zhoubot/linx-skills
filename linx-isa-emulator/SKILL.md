@@ -16,6 +16,12 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
 - Enforce the **safety rule**: every architectural control-flow target MUST point at a block start marker; otherwise raise an exception/illegal instruction. (Evidence: EMU-01, EMU-02)
 - Treat a **block** as the architectural sequencing unit (commit at `BSTOP` or implicit termination at the next block start marker). (Evidence: EMU-01)
 - Treat frame macro instructions (`FENTRY`/`FEXIT`/`FRET.*`) as **standalone blocks** for bring-up tooling and translation. (Evidence: EMU-03)
+- Implement the **three block forms** consistently:
+  - Coupled blocks: `BSTART … inst* … BSTOP` (normal CFG)
+  - Decoupled blocks: `BSTART.<type> … B.TEXT <tpc> … (header-only descriptors) …` then execute the out-of-line **linear** body at `<tpc>`, terminating at `BSTOP`, and return to the header continuation
+  - Template blocks: `FENTRY/FEXIT/FRET*/MCOPY/MSET` are **standalone** blocks and MUST NOT appear inside `BSTART..BSTOP`. (Evidence: EMU-01, EMU-03)
+- Make template blocks **restartable**: allow traps/interrupts between generated micro-ops; save progress in `BSTATE/EBSTATE` so re-executing resumes without double-committing.
+- MMU/IOMMU bring-up profile: TTBR0/TTBR1 page-walk (4K, 48-bit canonical VA) + a minimal tile IOMMU domain; surface faults via `TRAPNO` + `TRAPARG0` with a stable encoding.
 
 ## Workflow (implement or change an instruction)
 
@@ -39,6 +45,10 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
 
 - Translate **one Linx block into one QEMU TB** (from a block start marker up to `BSTOP` or the next block start marker). (Evidence: EMU-04)
 - Use `goto_tb` chaining when the next target is fixed and no `SETC.TGT` override occurs inside the block; fall back to indirect dispatch otherwise. (Evidence: EMU-04, EMU-05)
+- For **decoupled blocks**, treat the header and the body as separate TBs:
+  - Header TB ends by internally jumping to `B.TEXT`’s body TPC (without applying the safety rule)
+  - Body TB ends by returning to the header continuation (with the safety rule re-enabled). (Evidence: EMU-11)
+  - Body TB ends by returning to the header continuation (with the safety rule re-enabled). (Evidence: EMU-04)
 
 ## Differential testing tips
 

@@ -20,8 +20,13 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
   - Coupled blocks: `BSTART … inst* … BSTOP` (normal CFG)
   - Decoupled blocks: `BSTART.<type> … B.TEXT <tpc> … (header-only descriptors) …` then execute the out-of-line **linear** body at `<tpc>`, terminating at `BSTOP`, and return to the header continuation
   - Template blocks: `FENTRY/FEXIT/FRET*/MCOPY/MSET` are **standalone** blocks and MUST NOT appear inside `BSTART..BSTOP`. (Evidence: EMU-01, EMU-03)
-- Make template blocks **restartable**: allow traps/interrupts between generated micro-ops; save progress in `BSTATE/EBSTATE` so re-executing resumes without double-committing.
-- MMU/IOMMU bring-up profile: TTBR0/TTBR1 page-walk (4K, 48-bit canonical VA) + a minimal tile IOMMU domain; surface faults via `TRAPNO` + `TRAPARG0` with a stable encoding.
+- Make template blocks **restartable**: allow traps/interrupts between generated micro-ops; save progress in `EBARG` + `ECSTATE.BI` so re-executing resumes without double-committing.
+- Enforce v0.2 trap ABI in emulator behavior:
+  - `TRAPNO.E=1` is asynchronous interrupt; `TRAPNO.E=0` is synchronous fault/trap
+  - `TRAPNO.ARGV` gates `TRAPARG0` validity; keep `CAUSE` and 6-bit `TRAPNUM` consistent with the spec profile
+  - `ACRC` traps immediately with resume at next PC; `ACRE` is the architectural restore entry
+  - debug delivery uses v0.2 trapnums (HW BP=49, HW WP=51), with trap metadata in `TRAPNO`/`TRAPARG0`
+- MMU/IOMMU bring-up profile: TTBR0/TTBR1 page-walk (4K, 48-bit canonical VA) + a minimal tile IOMMU domain; surface faults via `TRAPNO` + `TRAPARG0` with v0.2 encoding.
 
 ## Workflow (implement or change an instruction)
 
@@ -47,7 +52,6 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
 - Use `goto_tb` chaining when the next target is fixed and no `SETC.TGT` override occurs inside the block; fall back to indirect dispatch otherwise. (Evidence: EMU-04, EMU-05)
 - For **decoupled blocks**, treat the header and the body as separate TBs:
   - Header TB ends by internally jumping to `B.TEXT`’s body TPC (without applying the safety rule)
-  - Body TB ends by returning to the header continuation (with the safety rule re-enabled). (Evidence: EMU-11)
   - Body TB ends by returning to the header continuation (with the safety rule re-enabled). (Evidence: EMU-04)
 
 ## Differential testing tips

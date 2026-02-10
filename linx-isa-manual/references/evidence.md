@@ -4,15 +4,15 @@ Use these IDs to justify spec/wording changes (e.g., in PR descriptions or revie
 
 ## MAN-01 — Block ISA is the architectural control-flow model
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (overview; defines block boundaries, block-granular execution model, and CARG).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (overview; defines block boundaries, block-granular execution model, and CARG).
 
 ## MAN-02 — Safety rule: all control-flow targets must be block start markers
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (states “every architectural control-flow target … must point at a block start marker”; branching into non-markers raises an exception).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (states “every architectural control-flow target … must point at a block start marker”; branching into non-markers raises an exception).
 
 ## MAN-03 — Branch targets may be template macro blocks (not just explicit `BSTART.*`)
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (example note: labels must refer to a block start marker such as `BSTART.*` or template blocks like `FENTRY`/`FRET.*`).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (example note: labels must refer to a block start marker such as `BSTART.*` or template blocks like `FENTRY`/`FRET.*`).
 
 ## MAN-04 — `FENTRY`/`FEXIT`/`FRET.*` are standalone blocks (do not wrap in `BSTART`/`BSTOP`)
 
@@ -22,7 +22,7 @@ Supporting source: QEMU commit `dc8b695a28` in `/Users/zhoubot/qemu` (comment: b
 
 ## MAN-05 — `C.BSTOP` is all-zeros in the 16-bit space; decode/loader bugs can surface as all-zero fetches
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (note about `C.BSTOP` being encoded as all-zeros in the 16-bit space).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (note about `C.BSTOP` being encoded as all-zeros in the 16-bit space).
 
 Supporting source: Cursor transcript `/Users/zhoubot/.cursor/projects/Users-zhoubot-qemu/agent-transcripts/9422c463-b686-4556-b4d1-2540da470b1d.txt` (debugging narrative around `linx_insn_decode_fail ... insn=0x00000000 len=2`, interpreted as `C.BSTOP` and tied to loader/offset issues).
 
@@ -32,5 +32,5 @@ Source: `/Users/zhoubot/linxisa/tools/isa/README.md` (commands for `extract_isa_
 
 ## MAN-07 — Call header adjacency rule (`BSTART CALL` + `SETRET`)
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (rule: `SETRET`/`C.SETRET` must appear immediately after a call-type block start marker; no instruction may be between them).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (rule: `SETRET`/`C.SETRET` must appear immediately after a call-type block start marker; no instruction may be between them).
 

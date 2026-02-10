@@ -4,7 +4,7 @@ Use these IDs to justify architecture constraints and bring-up deliverables.
 
 ## ARCH-01 — Block ISA contract: safety rule, block boundaries, and CARG lifetime
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (defines Block Split model, safety rule, and CARG lifetime rules).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (defines Block Split model, safety rule, and CARG lifetime rules).
 
 ## ARCH-02 — Frame macro blocks (`FENTRY`/`FEXIT`/`FRET.*`) are standalone blocks in bring-up tooling
 
@@ -14,7 +14,7 @@ Supporting source: QEMU commit `dc8b695a28` in `/Users/zhoubot/qemu` (comment: b
 
 ## ARCH-03 — Call header adjacency (`BSTART CALL` + `SETRET`)
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (rule: `SETRET`/`C.SETRET` must appear immediately after a call-type block start marker).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (rule: `SETRET`/`C.SETRET` must appear immediately after a call-type block start marker).
 
 ## ARCH-04 — Benchmarks require dynamic counts and instruction histograms
 

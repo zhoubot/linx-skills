@@ -4,11 +4,11 @@ Use these IDs to justify backend decisions (e.g., in PR descriptions, review rep
 
 ## LLVM-01 — Block ISA is the architectural control-flow model
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (Block Split overview + execution model; defines block boundaries and block-granular sequencing).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (Block Split overview + execution model; defines block boundaries and block-granular sequencing).
 
 ## LLVM-02 — Safety rule: all control-flow targets must be block start markers
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (safety rule; branching into non-markers raises an exception).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (safety rule; branching into non-markers raises an exception).
 
 ## LLVM-03 — Frame macro blocks are standalone blocks (do not wrap in extra `BSTART`/`BSTOP`)
 
@@ -16,11 +16,11 @@ Source: Codex session `019c1e50-4ffb-7380-893a-f8ed8426ee2a` user message in `/U
 
 ## LLVM-04 — Call header adjacency (`BSTART CALL` + `SETRET`)
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (rule: `SETRET`/`C.SETRET` must appear immediately after a call-type block start marker; no instruction may be between them).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (rule: `SETRET`/`C.SETRET` must appear immediately after a call-type block start marker; no instruction may be between them).
 
 ## LLVM-05 — Prefer generating TableGen/MC tables from the JSON spec
 
-Source: `/Users/zhoubot/linxisa/compiler/llvm/LLVM_BACKEND_GUIDE.md` (documents generating TableGen from `isa/spec/linxisa-v0.1.json` via `tools/isa/gen_llvm_tablegen.py`).
+Source: `/Users/zhoubot/linxisa/compiler/llvm/LLVM_BACKEND_GUIDE.md` (documents generating TableGen from `isa/spec/current/linxisa-v0.2.json` via `tools/isa/gen_llvm_tablegen.py`).
 
 Supporting source: `/Users/zhoubot/linxisa/tools/isa/README.md` (single-source JSON spec + codec generation used by multiple consumers).
 

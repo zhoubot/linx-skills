@@ -15,7 +15,7 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
 
 1. Treat **Block ISA** as a first-class chapter, not “just branches”: define block boundaries, CARG, and the safety rule up front. (Evidence: MAN-01, MAN-02, MAN-03)
 2. Treat **frame macro blocks** (`FENTRY`/`FEXIT`/`FRET.*`) as **standalone blocks**, not instructions that must be wrapped in `BSTART`/`BSTOP`. (Evidence: MAN-04, MAN-05)
-3. Keep the spec **machine-checkable**: align prose with the generated JSON spec and codec tables (`isa.txt → isa/spec/linxisa-v0.1.json → validate_spec → gen_*_codec`). (Evidence: MAN-06)
+3. Keep the spec **machine-checkable**: align prose with the generated JSON spec and codec tables (`isa/golden/v0.2/... → isa/spec/current/linxisa-v0.2.json → validate_spec → gen_*_codec`). (Evidence: MAN-06)
 4. When introducing new block types or tooling, explicitly define the **three block forms** and their legality:
    - Coupled blocks: `BSTART … inst* … BSTOP`
    - Decoupled blocks: header-only descriptors + `B.TEXT <tpc>` to an out-of-line **linear** body that terminates at `BSTOP`
@@ -110,7 +110,7 @@ Use this when documenting a new decoupled block type (e.g. `BSTART.TMA`, `BSTART
 - **Body form**: linear snippet beginning at `<tpc>`; MUST terminate at `BSTOP`/`C.BSTOP`.
 - **Forbidden in body**: any `BSTART.*`, any template block, any branch/jump/call/ret, any `B.*` header descriptor.
 - **Return rule**: on body `BSTOP`, resume at the header continuation PC.
-- **Trap semantics**: specify what `TRAPNO/TRAPARG/BSTATE/EBSTATE` report when trapping in header vs body.
+- **Trap semantics**: specify what `TRAPNO/TRAPARG0/EBARG/ECSTATE.BI` report when trapping in header vs body.
 
 ## Resources
 

@@ -142,7 +142,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     p.add_argument("trace", help="Trace log file (text)")
     p.add_argument(
         "--spec",
-        help="Path to isa/spec JSON (for mnemonic decoding). Defaults to ~/linxisa/isa/spec/linxisa-v0.1.json when present.",
+        help="Path to isa/spec JSON (for mnemonic decoding). Defaults to ~/linxisa/isa/spec/current/linxisa-v0.2.json when present.",
         default=None,
     )
     p.add_argument("--top", type=int, default=40, help="Show top-N mnemonics/raw encodings.")
@@ -163,7 +163,7 @@ def main(argv: list[str]) -> int:
         if args.spec:
             spec_path = Path(args.spec)
         else:
-            default = Path.home() / "linxisa" / "isa" / "spec" / "linxisa-v0.1.json"
+            default = Path.home() / "linxisa" / "isa" / "spec" / "current" / "linxisa-v0.2.json"
             if default.exists():
                 spec_path = default
 

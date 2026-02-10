@@ -69,7 +69,7 @@ When the Linx ISA “contract” changes (Block forms, templates, MMU/IOMMU), tr
 
 - **Decode**: add opcode recognition for `B.TEXT`, `B.IOR`, `B.ATTR`, `TLB.*`, and `HL.SSRGET/HL.SSRSET` full IDs.
 - **Control state**: implement decoupled header→body→return and body legality checks.
-- **Template engine**: model template blocks as restartable step sequences (progress recorded in a `BSTATE/EBSTATE`-like struct).
+- **Template engine**: model template blocks as restartable step sequences (progress recorded in an `EBARG`/`ECSTATE.BI`-compatible struct).
 - **Memory**: add MMU/IOMMU hooks (even if initially identity) so the call sites are stable.
 - **Regressions**: add/refresh directed programs for:
   - Decoupled headers (`B.TEXT` present, empty-body stubs for tile ops)

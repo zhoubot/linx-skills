@@ -59,13 +59,13 @@ Use this list when adding or changing any of these “stack-wide” contracts:
   - Define header-only legality + required `B.TEXT` (spec)
   - Compiler emits `B.TEXT` + out-of-line linear bodies (plus empty-body stubs where appropriate)
   - Emulator implements header→body→return execution and traps on illegal body instructions
-  - RTL/pyCircuit/Janus implement the same state machine and expose `BSTATE` fields needed for restart
+  - RTL/pyCircuit/Janus implement the same state machine and expose `EBARG` + `ECSTATE.BI` fields needed for restart
 - **Template blocks (restartable)**
-  - Define template progress state in `BSTATE/EBSTATE` (spec)
+  - Define template progress and restart contracts via `EBARG` + `ECSTATE.BI` (+ ext-context metadata/pointer when used)
   - Emulator executes “one step” per helper/iteration so interrupts can land between steps
-  - RTL implements a micro-op sequencer with precise restart from saved progress
+  - RTL implements a micro-op sequencer with precise restart from saved `EBARG` state
 - **TTBR0/TTBR1 MMU + IOMMU**
-  - Lock down v0.1 profile: 4K, 48-bit canonical VA, permission bits, fault reporting (`TRAPARG0`, cause)
+  - Lock down v0.2 profile: 4K, 48-bit canonical VA, permission bits, fault reporting (`TRAPNO` + `TRAPARG0`)
   - QEMU page-walk + TLB behavior matches the spec subset
   - Linux programs TTBR/TCR/MAIR and handles page faults without skipping work
   - RTL integrates MMU/IOMMU with LSU/TMA ordering rules

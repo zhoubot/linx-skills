@@ -4,15 +4,15 @@ Use these IDs to justify emulator behavior and debugging workflows.
 
 ## EMU-01 — Block ISA execution model and CARG semantics
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (defines block boundaries, block-granular sequencing, and CARG lifetime rules).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (defines block boundaries, block-granular sequencing, and CARG lifetime rules).
 
 ## EMU-02 — Safety rule: control-flow targets must be block start markers
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (states the safety rule; branching to a non-marker raises an exception).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (states the safety rule; branching to a non-marker raises an exception).
 
 ## EMU-03 — Template macro blocks are treated as block start markers
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (notes that valid targets include template blocks like `FENTRY`/`FRET.*`).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (notes that valid targets include template blocks like `FENTRY`/`FRET.*`).
 
 Supporting source: QEMU commit `dc8b695a28` in `/Users/zhoubot/qemu` (comment: bring-up toolchain emits standalone frame macro blocks `FENTRY/FEXIT/FRET.*` that should also be treated as BSTART markers).
 
@@ -26,7 +26,7 @@ Source: QEMU commit `dc8b695a28` in `/Users/zhoubot/qemu` (diff mentions `goto_t
 
 ## EMU-06 — `C.BSTOP` all-zeros and decode-fail symptom
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (note about `C.BSTOP` being encoded as all-zeros).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (note about `C.BSTOP` being encoded as all-zeros).
 
 Supporting source: Cursor transcript `/Users/zhoubot/.cursor/projects/Users-zhoubot-qemu/agent-transcripts/9422c463-b686-4556-b4d1-2540da470b1d.txt` (debugging around `linx_insn_decode_fail PC=0x1001e insn=0x00000000 len=2` and interpreting it as `C.BSTOP` plus loader offset issues).
 

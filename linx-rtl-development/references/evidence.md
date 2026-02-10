@@ -4,7 +4,7 @@ Use these IDs to justify RTL invariants and trace schema requirements.
 
 ## RTL-01 — Block ISA safety rule and block boundaries are architectural requirements
 
-Source: `/Users/zhoubot/linxisa/docs/isa-manual/src/chapters/04_block_isa.adoc` (safety rule: control-flow targets must be block start markers; block boundaries and block-granular execution model; CARG lifetime rules).
+Source: `/Users/zhoubot/linxisa/docs/architecture/isa-manual/src/chapters/04_block_isa.adoc` (safety rule: control-flow targets must be block start markers; block boundaries and block-granular execution model; CARG lifetime rules).
 
 ## RTL-02 — Frame macro blocks (`FENTRY`/`FEXIT`/`FRET.*`) are treated as standalone blocks in bring-up
 

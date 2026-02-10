@@ -22,7 +22,7 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
   - Header→body internal jump bypasses the safety rule; body→return re-enables it.
 - Template blocks (`FENTRY/FEXIT/FRET*/MCOPY/MSET`) are **restartable**:
   - Implement a micro-op sequencer that can yield between steps
-  - Save/restore progress in `BSTATE/EBSTATE` so traps/interrupts resume precisely.
+  - Save/restore progress in `EBARG` + `ECSTATE.BI` (+ ext-context metadata/pointer when used) so traps/interrupts resume precisely.
 - MMU/IOMMU bring-up profile: TTBR0/TTBR1 page-walk (4K, canonical VA) + tile IOMMU for DMA-style engines; surface fault address/cause in the same fields as QEMU.
 
 ## Bring-up workflow (recommended loop)
@@ -44,7 +44,7 @@ When you need the concrete “why”, open `references/evidence.md` and cite the
 - Trap/exception cause + tval + next PC
 - Reset sequencing + privilege state
 - Block-control metadata (when available): `brtype`, `carg`, `cond`, `tgt` (match what QEMU logs on failures). (Evidence: RTL-03)
-- Block/trap restart state (when implemented): `BSTATE` snapshot at trap, `EBSTATE` valid bit, and a “in-body vs in-header” indicator (`BI`) to debug decoupled/template restart.
+- Block/trap restart state (when implemented): `EBARG` snapshot at trap, `ECSTATE.BI` (“in-body vs in-header”), and ext-context metadata/pointer fields to debug decoupled/template restart.
 
 ## Practical verification structure
 
